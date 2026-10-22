@@ -1,0 +1,27 @@
+{
+  "name": "semiworld",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SemiWorld / Semiconductor Tycoon - core domain models & data schemas",
+  "type": "module",
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "demo": "node scripts/demo.ts",
+    "sim": "node scripts/factorySim.ts",
+    "test": "node --test \"tests/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "typescript": "5.8.3"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "cors": "^2.8.6",
+    "express": "^5.3.0"
+  }
+}

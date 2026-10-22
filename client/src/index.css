@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-darker text-white antialiased;
+    /* Prevent the WebView from rubber-banding / selecting text on rapid taps. */
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  /* Allow text selection inside modals where it is useful. */
+  input,
+  textarea {
+    user-select: text;
+  }
+}
+
+@layer components {
+  /* Cyberpunk card surface used by every panel. */
+  .panel {
+    @apply bg-darker rounded-xl border border-neonBlue/20 p-4 sm:p-6 space-y-5;
+  }
+
+  /* Primary neon action button – always meets the 44px touch target. */
+  .btn-neon {
+    @apply min-h-[44px] bg-neonBlue text-darker rounded-xl px-6 py-3 font-display font-semibold
+           transition-all active:scale-[0.97] hover:bg-neonBlue/90 hover:shadow-neon-blue
+           disabled:opacity-50 disabled:active:scale-100;
+  }
+
+  .btn-neon-green {
+    @apply min-h-[44px] bg-neonGreen text-darker rounded-xl px-6 py-3 font-display font-semibold
+           transition-all active:scale-[0.97] hover:bg-neonGreen/90 hover:shadow-neon-green
+           disabled:opacity-50 disabled:active:scale-100;
+  }
+
+  .btn-ghost {
+    @apply min-h-[44px] bg-dark text-gray-300 rounded-xl px-6 py-3 border border-gray-600
+           transition-colors active:scale-[0.97] hover:bg-gray-800 hover:text-white
+           disabled:opacity-50 disabled:active:scale-100;
+  }
+
+  .stat-card {
+    @apply rounded-xl border p-4;
+  }
+
+  /* Toast container – pointer-events none so it never blocks taps. */
+  .toast-stack {
+    @apply fixed bottom-24 left-0 right-0 z-[100] flex flex-col items-center gap-2
+           px-4 pointer-events-none;
+  }
+
+  .toast {
+    @apply pointer-events-auto flex items-center gap-3 max-w-sm w-full
+           bg-darker/95 backdrop-blur-md border border-neonBlue/50 rounded-xl
+           px-4 py-3 text-sm shadow-neon-blue animate-toast-in;
+  }
+}
+
+@layer utilities {
+  /* Thin neon scrollbar for the dark theme. */
+  .scrollbar-neon::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-neon::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-neon::-webkit-scrollbar-thumb {
+    @apply bg-neonBlue/30 rounded-full;
+  }
+}
