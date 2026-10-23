@@ -1,73 +1,45 @@
-import type { Financials } from "../types";
+import type { StateSnapshot } from "../types";
+import { engine } from "../GameEngine";
 
-export interface FinancialsPanelProps {
-  state: Financials;
-  onAdvanceMonth: () => void;
-}
-
-export function FinancialsPanel({ state, onAdvanceMonth }: FinancialsPanelProps) {
-  const rows: { label: string; value: number; tone: string }[] = [
-    { label: "收益", value: state.revenue, tone: "text-neonGreen" },
-    { label: "材料成本", value: state.materials, tone: "text-neonOrange" },
-    { label: "營運費用 (OPEX)", value: state.opex, tone: "text-neonBlue" },
-    { label: "折舊", value: state.depreciation, tone: "text-neonPink" },
-  ];
-
-  const balanceRows: { label: string; value: number; tone: string }[] = [
-    { label: "現金", value: state.cash, tone: "text-neonGreen" },
-    { label: "資產", value: state.assets, tone: "text-neonOrange" },
-    { label: "負債", value: state.liabilities, tone: "text-neonPink" },
-    { label: "淨值", value: state.assets - state.liabilities, tone: "text-neonBlue" },
-  ];
-
+export function FinancialsPanel({ state }: { state: StateSnapshot }) {
+  const financials = engine.getFinancials();
+  const diesPerSec = engine.getDiesPerSecond?.() ?? 0;
   return (
-    <section className="panel">
-      {/* Profit & Loss */}
-      <div>
-        <h2 className="text-base font-display text-neonBlue mb-3">📊 損益明細</h2>
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          {rows.map((r) => (
-            <div key={r.label} className="bg-dark/50 rounded-lg px-3 py-2">
-              <span className="block text-xs text-gray-400">{r.label}</span>
-              <span className={`font-mono font-semibold ${r.tone}`}>
-                {r.value.toLocaleString()}K
-              </span>
-            </div>
-          ))}
+    <section className="space-y-4">
+      <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+        <h2 className="text-sm font-medium text-indigo-300 mb-2">📐 產能與損益公式</h2>
+        <div className="text-xs text-slate-300">毛產速 {diesPerSec.toFixed(1)} dies/s × 良率 = 有效良品 + 報廢</div>
+        <div className="text-xs text-emerald-300 mt-1">淨現金流 {financials.netProfit.toLocaleString()}K</div>
+      </div>
+      <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+          <div className="text-slate-400">收益</div>
+          <div className="text-emerald-300 font-mono">{financials.revenue.toLocaleString()}K</div>
         </div>
-
-        <div className="mt-4 pt-4 border-t border-neonBlue/20">
-          <p
-            className={`text-lg font-display font-bold ${
-              state.netProfit >= 0 ? "text-neonGreen" : "text-neonPink"
-            }`}
-          >
-            稅後淨利: {state.netProfit >= 0 ? "+" : ""}
-            {state.netProfit.toLocaleString()}K
-          </p>
+        <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+          <div className="text-slate-400">材料成本</div>
+          <div className="text-amber-300 font-mono">{financials.materials.toLocaleString()}K</div>
+        </div>
+        <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+          <div className="text-slate-400">營運費用</div>
+          <div className="text-amber-300 font-mono">{financials.opex.toLocaleString()}K</div>
+        </div>
+        <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+          <div className="text-slate-400">淨利</div>
+          <div className="text-emerald-300 font-mono">{financials.netProfit.toLocaleString()}K</div>
         </div>
       </div>
-
-      {/* Cash & Assets */}
-      <div>
-        <h2 className="text-base font-display text-neonBlue mb-3">💰 現金與資產</h2>
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          {balanceRows.map((r) => (
-            <div key={r.label} className="bg-dark/50 rounded-lg px-3 py-2">
-              <span className="block text-xs text-gray-400">{r.label}</span>
-              <span className={`font-mono font-semibold ${r.tone}`}>
-                {r.value.toLocaleString()}K
-              </span>
+      <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+        <h3 className="text-xs text-slate-400 mb-2">廠房排行</h3>
+        {state.fabs.filter((f) => f.unlocked).map((f) => {
+          const d = engine.getFabDiagnostics(f.id);
+          return (
+            <div key={f.id} className="flex justify-between text-xs text-slate-300 py-1 border-b border-slate-800">
+              <span>{f.name}</span>
+              <span className="font-mono text-indigo-300">{d?.goodDiesPerSecond?.toFixed(1) ?? 0} dies/s · Yield {d?.yieldPercent ?? 0}%</span>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Advance Month */}
-      <div className="pt-4 border-t border-neonBlue/20">
-        <button onClick={onAdvanceMonth} className="btn-neon w-full text-lg sm:text-xl">
-          📅 推進下個月
-        </button>
+          );
+        })}
       </div>
     </section>
   );

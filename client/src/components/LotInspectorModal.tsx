@@ -24,6 +24,7 @@ interface LotInspectorModalProps {
   lot: LotInspectionData;
   isOpen: boolean;
   onClose: () => void;
+  onExpedite?: (lotId: string) => void;
 }
 
 export function LotInspectorModal({
@@ -49,7 +50,6 @@ export function LotInspectorModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={onClose}
       role="dialog"
-      aria-modal="true"
       aria-label="良率波向器"
     >
       <div
@@ -109,7 +109,7 @@ export function LotInspectorModal({
                   <span className={`font-medium ${layer.completed ? "text-neonGreen" : "text-gray-300"}`}>
                     第 {layer.layer} 層 · {layer.name}
                   </span>
-                  <span className={`text-[10px] font-mono ${layer.completed ? "text-neonGreen" : "text-gray-500"}`}>
+                  <span className={`text-[10px] font-mono ${layer.completed ? "text-neonGreen" : "text-gray-300"}`}>
                     {layer.progress.toFixed(0)}%
                   </span>
                 </div>

@@ -6,32 +6,7 @@ interface EquipmentShopProps {
   onBuyEquipment: (eqId: string) => void;
 }
 
-interface ShopEquipment {
-  id: string;
-  name: string;
-  category: string;
-  priceUsd: number;
-  health?: number;
-  processType?: string;
-  brand?: string;
-  supportedNodes?: string;
-  throughputWph?: number;
-}
-
-const SHOP_CATALOG: ShopEquipment[] = [
-  { id: "litho_scanner", name: "KrF Litho Scanner", category: "fab", priceUsd: 2500, processType: "LITHOGRAPHY", brand: "ASML", supportedNodes: "180nm–350nm", throughputWph: 165 },
-  { id: "etch_reactor", name: "Dry Etch Reactor", category: "fab", priceUsd: 300, processType: "ETCHING", brand: "Lam Research", supportedNodes: "180nm–350nm", throughputWph: 45 },
-  { id: "cvd_tool", name: "CVD Deposition System", category: "fab", priceUsd: 1200, processType: "DEPOSITION", brand: "Applied Materials", supportedNodes: "90nm–350nm", throughputWph: 28 },
-  { id: "cmp_tool", name: "CMP Polisher", category: "fab", priceUsd: 900, processType: "CMP", brand: "Applied Materials", supportedNodes: "130nm–350nm", throughputWph: 35 },
-  { id: "implanter", name: "Ion Implanter", category: "fab", priceUsd: 1800, processType: "ION_IMPLANT", brand: "Applied Materials", supportedNodes: "90nm–350nm", throughputWph: 60 },
-  { id: "furnace", name: "Thermal Furnace", category: "fab", priceUsd: 600, processType: "THERMAL", brand: "Tokyo Electron", supportedNodes: "90nm–350nm", throughputWph: 120 },
-  { id: "clean_station", name: "Wet Clean Station", category: "fab", priceUsd: 450, processType: "CLEAN", brand: "Tokyo Electron", supportedNodes: "90nm–350nm", throughputWph: 90 },
-  { id: "inspection", name: "Wafer Inspector", category: "fab", priceUsd: 750, processType: "INSPECTION", brand: "KLA", supportedNodes: "90nm–350nm", throughputWph: 20 },
-  { id: "euv_scanner", name: "EUV Scanner NXE:3600D", category: "fab", priceUsd: 320000, processType: "LITHOGRAPHY", brand: "ASML", supportedNodes: "2nm–28nm", throughputWph: 115 },
-  { id: "high_na_euv", name: "High-NA EUV EXE:5000", category: "fab", priceUsd: 380000, processType: "LITHOGRAPHY", brand: "ASML", supportedNodes: "1.6nm–28nm", throughputWph: 140 },
-  { id: "hybrid_bonder", name: "Hybrid Bonder Xceed", category: "fab", priceUsd: 55000, processType: "PACKAGING", brand: "Besi", supportedNodes: "1.6nm–16nm", throughputWph: 45 },
-  { id: "dicing_saw", name: "Dicing Saw DAD3351", category: "fab", priceUsd: 3800, processType: "PACKAGING", brand: "DISCO", supportedNodes: "all nodes", throughputWph: 150 },
-];
+import { EQUIPMENT_CATALOG as SHOP_CATALOG, type ShopEquipment } from "../equipmentCatalog";
 
 interface CategoryFilter {
   id: string;
@@ -122,7 +97,10 @@ export function EquipmentShop({ state, onBuyEquipment }: EquipmentShopProps) {
           return (
             <div key={eq.id} className="bg-dark rounded-xl border p-3 hover:border-neonBlue/40 transition-colors">
               <div className="flex justify-between items-start mb-2">
+<div className="flex items-center gap-2 mb-2">
+                <img src={`/assets/sprites/tool_${eq.id}.png`} alt={eq.name} className="w-10 h-10 object-contain" />
                 <h3 className="text-sm font-medium text-white">{eq.name}</h3>
+              </div>
                 <span className={
                   affordable
                     ? "text-[10px] font-mono text-neonGreen"
@@ -132,10 +110,12 @@ export function EquipmentShop({ state, onBuyEquipment }: EquipmentShopProps) {
                 </span>
               </div>
               <p className="text-xs text-gray-400 mb-2">{eq.brand} · {eq.processType}</p>
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-1">
                 <span className="text-[10px] text-gray-500">{eq.supportedNodes}</span>
                 <span className="text-[10px] font-mono text-gray-500">{eq.throughputWph} WPH</span>
               </div>
+              <div className="text-[10px] text-gray-500 mb-2">耗電：{eq.powerKw} kW · 耗材：{eq.materialCostPerWafer}K/片 · MTBF：{eq.mtbfHours}h</div>
+              <p className="text-[10px] text-gray-400 mb-3">{eq.description}</p>
               <button
                 onClick={() => onBuyEquipment(eq.id)}
                 disabled={!affordable}

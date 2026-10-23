@@ -7,7 +7,7 @@
  * interactive CLI command.  It is the behavioral peer of scripts/interactiveGame.ts.
  */
 
-import express, { type Request, type Response } from 'express';
+import express, { type Request, type Response, type NextFunction } from 'express';
 
 interface MaterialCostInput {
   material: string;
@@ -18,7 +18,7 @@ function okJson(res: Response, data: unknown) {
   res.json(data);
 }
 
-function serverError(res: Response, err: unknown) {
+function serverError(err: unknown, _req: Request, res: Response, _next: NextFunction) {
   console.error(err);
   res.status(500).json({ ok: false, error: err instanceof Error ? err.message : String(err) });
 }

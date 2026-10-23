@@ -2,13 +2,12 @@ import type { StateSnapshot } from "../types";
 
 export interface ResearchPanelProps {
   state: StateSnapshot;
-  onAdvanceMonth: () => void;
-  researchNode: (nodeId: string) => void;
+    researchNode: (nodeId: string) => void;
 }
 
 const LEVEL_LABEL = ["鎖定", "研發中", "已解鎖"];
 
-export function ResearchPanel({ state, onAdvanceMonth, researchNode }: ResearchPanelProps) {
+export function ResearchPanel({ state, researchNode }: ResearchPanelProps) {
   return (
     <section className="panel">
       <div>
@@ -67,12 +66,7 @@ export function ResearchPanel({ state, onAdvanceMonth, researchNode }: ResearchP
         </div>
       </div>
 
-      {/* Advance Month */}
-      <div className="pt-4 border-t border-neonBlue/20">
-        <button onClick={onAdvanceMonth} className="btn-neon w-full text-lg sm:text-xl">
-          📅 推進下個月
-        </button>
-      </div>
+{/* Advance Month removed - real-time engine */}
     </section>
   );
 }

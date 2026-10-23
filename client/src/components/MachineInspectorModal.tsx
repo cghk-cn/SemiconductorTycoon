@@ -50,7 +50,7 @@ export function MachineInspectorModal({
 
   const handleUpgrade = () => {
     onUpgrade(machine.id);
-    setToast({ message: `${machine.name} 零件升累已啟用`, tone: "success" });
+    setToast({ message: `${machine.name} 零件升級已啟用`, tone: "success" });
     setTimeout(() => setToast(null), 2000);
   };
 
@@ -60,7 +60,7 @@ export function MachineInspectorModal({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="機号諸情"
+      aria-label="機台詳情"
     >
       <div
         className="bg-darker rounded-2xl p-6 max-w-md w-full border border-neonBlue/40 shadow-[0_0_40px_rgba(0,212,255,0.25)]"
@@ -140,7 +140,7 @@ export function MachineInspectorModal({
             onClick={handleUpgrade}
             className="min-h-[44px] bg-neonBlue text-darker rounded-xl px-4 py-2 font-display font-semibold transition-all active:scale-[0.97] hover:bg-neonBlue/90 hover:shadow-neon-blue"
           >
-            ⬆ 升累零件
+            ⬆ 升級零件
           </button>
         </div>
 

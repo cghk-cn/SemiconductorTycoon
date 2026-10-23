@@ -2,8 +2,7 @@ import type { Contract, StateSnapshot } from "../types";
 
 export interface ContractsPanelProps {
   state: StateSnapshot;
-  onAdvanceMonth: () => void;
-  researchNode: (nodeId: string) => void;
+    researchNode: (nodeId: string) => void;
   onAcceptContract: (contractId: string) => void;
   onCompleteContract: (contractId: string) => void;
 }
@@ -22,7 +21,7 @@ const STATUS_STYLE: Record<Contract["status"], string> = {
 
 export function ContractsPanel({
   state,
-  onAdvanceMonth,
+  
   onAcceptContract,
   onCompleteContract,
 }: ContractsPanelProps) {
@@ -128,13 +127,6 @@ export function ContractsPanel({
             );
           })}
         </div>
-      </div>
-
-      {/* Advance Month */}
-      <div className="pt-4 border-t border-neonBlue/20">
-        <button onClick={onAdvanceMonth} className="btn-neon w-full text-lg sm:text-xl">
-          📅 推進下個月
-        </button>
       </div>
     </section>
   );

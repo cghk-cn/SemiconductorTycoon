@@ -1,6 +1,5 @@
 import {
   ComponentCategory,
-  LithoSource,
   MaterialCategory,
   PackagingType,
   ProcessType,
@@ -11,7 +10,6 @@ import { NODE_SPECS } from './nodeSpecs.ts';
 import {
   ValidationError,
   deepFreeze,
-  requireInRange,
   requireNonEmptyArray,
   requireNonEmptyString,
   requireNonNegativeNumber,

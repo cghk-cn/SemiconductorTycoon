@@ -12,16 +12,21 @@ import { FinancialsPanel } from "./components/FinancialsPanel";
 import { StatusBar } from "./components/StatusBar";
 import { BottomNav } from "./components/BottomNav";
 import { Toast, type ToastMessage } from "./components/Toast";
+import { OfflineSummaryModal } from "./components/OfflineSummaryModal";
 
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [state, setState] = useState<StateSnapshot>(() => engine.getState());
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [offlineSummary, setOfflineSummary] = useState<any>(engine.consumeOfflineSummary());
 
   // Keep React state in sync with the engine.
   useEffect(() => {
-    const id = setInterval(() => setState(engine.getState()), 250);
+    const id = setInterval(() => {
+      engine.tick(1000);
+      setState(engine.getState());
+    }, 1000);
     return () => clearInterval(id);
   }, []);
 
@@ -34,12 +39,6 @@ export default function App() {
   }, []);
 
   const refresh = useCallback(() => setState(engine.getState()), []);
-
-  const advanceMonth = useCallback(() => {
-    engine.advanceMonth();
-    refresh();
-    showToast("📅 已推進至下個月", "success");
-  }, [refresh, showToast]);
 
   const researchNode = useCallback(
     (nodeId: string) => {
@@ -77,7 +76,6 @@ export default function App() {
     [refresh, showToast]
   );
 
-  const financials = useMemo(() => engine.getFinancials(), [state]);
 
   // Keep the selected tab in sync with the current route.
   const activeTab = useMemo(() => {
@@ -86,21 +84,24 @@ export default function App() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-darker text-white antialiased flex flex-col">
+    <div className="min-h-screen bg-[#0B0F17] text-white antialiased flex flex-col">
       {/* Status Header */}
       <StatusBar state={state} />
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto scrollbar-neon px-4 py-4 pb-24">
         <div className="max-w-4xl mx-auto">
+          {engine.getBottleneckWarning() && (
+            <div className="mb-3 p-3 rounded-xl bg-neonPink/10 border border-neonPink/40 text-neonPink text-sm">
+              ⚠ {engine.getBottleneckWarning()}
+            </div>
+          )}
           <Routes>
             <Route
               path="/"
               element={
                 <Dashboard
                   state={state}
-                  onAdvanceMonth={advanceMonth}
-                  researchNode={researchNode}
                   buyEquipment={buyEquipment}
                 />
               }
@@ -110,7 +111,7 @@ export default function App() {
               element={
                 <FabPanel
                   state={state}
-                  onAdvanceMonth={advanceMonth}
+                 
                   onBuyEquipment={buyEquipment}
                 />
               }
@@ -120,7 +121,7 @@ export default function App() {
               element={
                 <ContractsPanel
                   state={state}
-                  onAdvanceMonth={advanceMonth}
+                 
                   researchNode={researchNode}
                   onAcceptContract={acceptContract}
                   onCompleteContract={completeContract}
@@ -132,7 +133,7 @@ export default function App() {
               element={
                 <ResearchPanel
                   state={state}
-                  onAdvanceMonth={advanceMonth}
+                 
                   researchNode={researchNode}
                 />
               }
@@ -149,7 +150,7 @@ export default function App() {
             <Route
               path="/financials"
               element={
-                <FinancialsPanel state={financials} onAdvanceMonth={advanceMonth} />
+                <FinancialsPanel state={state} />
               }
             />
             <Route
@@ -176,6 +177,7 @@ export default function App() {
 
       {/* Toasts */}
       <Toast toasts={toasts} />
+      <OfflineSummaryModal summary={offlineSummary} onClose={() => setOfflineSummary(null)} />
 
       {/* Bottom Navigation */}
       <BottomNav activeTab={activeTab} onNavigate={(p) => navigate(p)} />

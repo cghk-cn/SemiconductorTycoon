@@ -22,7 +22,6 @@ import {
   ORDERED_PROCESS_FLOW,
   ProcessNodeId,
   stagesUnlockedAt,
-  type ProcessNodeSpec,
 } from './processFlow.ts';
 import {
   createProcessStep,
@@ -1138,7 +1137,6 @@ export function buildFlowRecipe(options: FlowRecipeOptions): ProductRecipe {
   if (cycleTimeMultiplier <= 0) {
     throw new RangeError('FlowRecipeOptions.cycleTimeMultiplier must be > 0');
   }
-  const yieldBonus = options.yieldBonusPercent ?? 0;
 
   const unlocked = stagesUnlockedAt(options.targetNode);
   const selected = options.stageNodeIds
