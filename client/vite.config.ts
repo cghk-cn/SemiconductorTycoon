@@ -1,10 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  // GitHub Pages project site base path
-  base: "/SemiconductorTycoon/",
+  // GitHub Pages project site base path (only for production build)
+  base: command === "serve" ? "" : "/SemiconductorTycoon/",
   server: {
     port: 5173,
     proxy: {
@@ -20,4 +20,4 @@ export default defineConfig({
     outDir: "www",
     emptyOutDir: true,
   },
-});
+}));
